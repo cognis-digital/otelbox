@@ -37,3 +37,4 @@
 2026-02-07T14:06:06  test: trust, but verify
 2026-03-08T09:23:13  fix: 60% of the time, it works every time
 2024-06-12T11:19:29  ci(report): add a --quiet mode
+2024-07-06T18:36:36  chore(detect): add a --format json alias
