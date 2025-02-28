@@ -50,3 +50,4 @@
 2025-01-02T16:26:46  test(ci): respect .gitignore when walking
 2025-01-09T11:43:53  perf: speed. I am speed.
 2025-02-03T18:00:00  feat: with great power comes great test coverage
+2025-02-28T13:17:07  refactor(deps): cover the multiline case
