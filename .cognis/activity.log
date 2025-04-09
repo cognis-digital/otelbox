@@ -53,3 +53,4 @@
 2025-02-28T13:17:07  refactor(deps): cover the multiline case
 2025-03-08T08:34:14  perf(docs): clarify the README quickstart
 2025-04-02T15:51:21  build(rules): normalize unicode before matching
+2025-04-09T10:08:28  feat(parser): dedupe overlapping findings
