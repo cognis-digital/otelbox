@@ -54,3 +54,4 @@
 2025-03-08T08:34:14  perf(docs): clarify the README quickstart
 2025-04-02T15:51:21  build(rules): normalize unicode before matching
 2025-04-09T10:08:28  feat(parser): dedupe overlapping findings
+2025-05-04T17:25:35  refactor(mcp): add type hints to the public API
