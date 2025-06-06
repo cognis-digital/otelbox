@@ -56,3 +56,4 @@
 2025-04-09T10:08:28  feat(parser): dedupe overlapping findings
 2025-05-04T17:25:35  refactor(mcp): add type hints to the public API
 2025-05-29T12:42:42  refactor(scan): pin the test dependencies
+2025-06-06T19:59:49  ci(engine): add a regression fixture
