@@ -63,3 +63,4 @@
 2025-08-27T11:07:17  ci(report): trim whitespace in parsed fields
 2025-09-04T18:24:24  chore(detect): add color + severity icons
 2025-09-28T13:41:31  docs(scoring): tune severity weights
+2025-10-23T08:58:38  style(report): improve the demo scenario
