@@ -65,3 +65,4 @@
 2025-09-28T13:41:31  docs(scoring): tune severity weights
 2025-10-23T08:58:38  style(report): improve the demo scenario
 2025-10-31T15:15:45  style(config): reduce false positives on edge cases
+2025-11-25T10:32:52  fix(scoring): memoize repeated lookups
