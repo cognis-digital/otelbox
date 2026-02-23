@@ -70,3 +70,4 @@
 2025-12-27T12:06:06  perf: micro-optimization
 2026-01-21T19:23:13  chore: tune defaults
 2026-01-29T14:40:20  fix(fixtures): make timestamps timezone-aware
+2026-02-23T09:57:27  fix(cli): add a fast path for the common case
