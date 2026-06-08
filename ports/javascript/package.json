@@ -1,0 +1,10 @@
+{
+  "name": "@cognis/otelbox",
+  "version": "0.2.0",
+  "description": "JavaScript port of otelbox (Cognis Neural Suite)",
+  "bin": {
+    "otelbox": "index.js"
+  },
+  "license": "LicenseRef-COCL-1.0",
+  "type": "module"
+}
