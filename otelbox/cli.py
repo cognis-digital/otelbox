@@ -1,38 +1,111 @@
-"""OTELBOX command-line interface."""
+"""Command-line interface for OTELBOX.
+
+Subcommands:
+  lint <config.yaml>   Validate/triage an OTel collector config. Exits non-zero
+                       if any error-severity findings are present.
+  bundle [--name N]    Emit a runnable collector + dashboards bundle (as JSON
+                       map of path -> contents). Analysis/generation only;
+                       writes nothing and contacts no network.
+
+Global: --version, --format {table,json}
+"""
 from __future__ import annotations
-import argparse, sys
-from otelbox.core import scan, to_json, TOOL_NAME, TOOL_VERSION
 
-def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="otelbox", description="OTELBOX — Cognis Neural Suite")
-    ap.add_argument("--version", action="version", version=f"{TOOL_NAME} {TOOL_VERSION}")
-    sub = ap.add_subparsers(dest="cmd")
-    s = sub.add_parser("scan", help="scan a file or directory")
-    s.add_argument("target")
-    s.add_argument("--format", choices=["table", "json"], default="table")
-    s.add_argument("--fail-on", choices=["critical", "high", "medium", "low"], default=None)
-    sub.add_parser("mcp", help="run as an MCP server")
-    args = ap.parse_args(argv)
+import argparse
+import json
+import sys
+from typing import List, Optional
 
-    if args.cmd == "mcp":
-        from otelbox.mcp_server import serve
-        return serve()
-    if args.cmd == "scan":
-        res = scan(args.target)
+from . import TOOL_NAME, TOOL_VERSION
+from .core import validate_config, build_bundle, load_config_text
+
+
+def _print_table_findings(result) -> None:
+    if not result.findings:
+        print("no findings")
+    else:
+        width = max(len(f.code) for f in result.findings)
+        for f in result.findings:
+            loc = f" [{f.location}]" if f.location else ""
+            print(f"{f.severity.upper():7} {f.code:<{width}}  {f.message}{loc}")
+    s = result.summary
+    print(
+        f"-- {s.get('error', 0)} error(s), "
+        f"{s.get('warning', 0)} warning(s), "
+        f"{s.get('info', 0)} info; ok={result.ok}"
+    )
+
+
+def _cmd_lint(args) -> int:
+    try:
+        with open(args.config, "r", encoding="utf-8") as fh:
+            text = fh.read()
+    except OSError as exc:
+        print(json.dumps({"error": str(exc)}) if args.format == "json"
+              else f"error: {exc}", file=sys.stderr)
+        return 2
+    try:
+        cfg = load_config_text(text)
+    except ValueError as exc:
+        msg = f"parse error: {exc}"
         if args.format == "json":
-            print(to_json(res))
+            print(json.dumps({"ok": False, "error": msg}))
         else:
-            if not res.findings:
-                print(f"[{TOOL_NAME}] no findings in {args.target}")
-            for f in res.findings:
-                print(f"  [{f.severity.upper():8}] {f.id}  {f.title}  ({f.where})")
-            print(f"\n{len(res.findings)} findings · risk score {res.score} · {res.elapsed_ms}ms")
-        order = {"critical": 4, "high": 3, "medium": 2, "low": 1}
-        if args.fail_on and any(order.get(f.severity, 0) >= order[args.fail_on] for f in res.findings):
-            return 2
-        return 0
-    ap.print_help()
+            print(msg, file=sys.stderr)
+        return 2
+
+    result = validate_config(cfg)
+    if args.format == "json":
+        print(json.dumps(result.as_dict(), indent=2))
+    else:
+        _print_table_findings(result)
+    return 0 if result.ok else 1
+
+
+def _cmd_bundle(args) -> int:
+    bundle = build_bundle(name=args.name)
+    if args.format == "json":
+        print(json.dumps({"name": args.name, "files": bundle}, indent=2))
+    else:
+        for path in sorted(bundle):
+            lines = bundle[path].count("\n")
+            print(f"{path}  ({lines} lines)")
+        print(f"-- {len(bundle)} file(s) generated")
     return 0
 
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog=TOOL_NAME,
+        description="One-command OpenTelemetry collector + dashboards bundle "
+                    "(validate / triage / generate).",
+    )
+    parser.add_argument(
+        "--version", action="version",
+        version=f"{TOOL_NAME} {TOOL_VERSION}",
+    )
+    parser.add_argument(
+        "--format", choices=("table", "json"), default="table",
+        help="output format (default: table)",
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p_lint = sub.add_parser("lint", help="validate an OTel collector config")
+    p_lint.add_argument("config", help="path to collector YAML config")
+    p_lint.set_defaults(func=_cmd_lint)
+
+    p_bundle = sub.add_parser("bundle", help="emit a runnable collector + dashboards bundle")
+    p_bundle.add_argument("--name", default="otelbox", help="bundle directory name")
+    p_bundle.set_defaults(func=_cmd_bundle)
+
+    return parser
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    return args.func(args)
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())
