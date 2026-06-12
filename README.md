@@ -16,7 +16,7 @@
 </div>
 
 ```bash
-pip install cognis-otelbox
+pip install "git+https://github.com/cognis-digital/otelbox.git"
 otelbox scan .            # → prioritized findings in seconds
 ```
 
@@ -48,7 +48,7 @@ OTel is the standard
 ## Quick start
 
 ```bash
-pip install cognis-otelbox
+pip install "git+https://github.com/cognis-digital/otelbox.git"
 otelbox --version
 otelbox scan .                       # scan current project
 otelbox scan . --format json         # machine-readable
