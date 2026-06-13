@@ -20,6 +20,32 @@ pip install cognis-otelbox
 otelbox scan .            # → prioritized findings in seconds
 ```
 
+## Usage — step by step
+
+`otelbox` is a one-command OpenTelemetry collector + dashboards bundle: it validates collector configs and emits a runnable bundle.
+
+1. **Install**:
+   ```bash
+   pip install -e .
+   otelbox --version
+   ```
+2. **Lint** an OTel collector config:
+   ```bash
+   otelbox lint collector.yaml
+   ```
+3. **Emit a runnable bundle** (collector config + dashboards) into a named directory:
+   ```bash
+   otelbox bundle --name my-stack
+   ```
+4. **Read the output** — inspect the generated bundle directory before running it:
+   ```bash
+   ls my-stack/
+   ```
+5. **Automate in CI** — lint configs on every change so a bad collector config fails the build:
+   ```bash
+   otelbox lint collector.yaml || exit 1
+   ```
+
 ## Contents
 
 - [Why otelbox?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
