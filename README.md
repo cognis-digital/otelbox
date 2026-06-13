@@ -20,6 +20,12 @@ pip install "git+https://github.com/cognis-digital/otelbox.git"
 otelbox scan .            # → prioritized findings in seconds
 ```
 
+<!-- cognis:layman:start -->
+## What is this?
+
+Otelbox is a command-line tool that checks your OpenTelemetry collector configuration for common mistakes before they cause problems in production. You point it at a YAML config file and it tells you things like missing receivers, exporters that use plain unencrypted connections, or components you defined but never actually wired up. It also generates a ready-to-use local monitoring bundle — collector config, Prometheus scrape config, and Grafana dashboards — so you can stand up a working observability stack in one command. It is designed for developers and DevOps engineers who want a fast, offline, no-account-required sanity check for their telemetry pipeline setup.
+<!-- cognis:layman:end -->
+
 ## Contents
 
 - [Why otelbox?](#why) · [Features](#features) · [Quick start](#quick-start) · [Example](#example) · [Architecture](#architecture) · [AI stack](#ai-stack) · [How it compares](#how-it-compares) · [Integrations](#integrations) · [Install anywhere](#install-anywhere) · [Related](#related) · [Contributing](#contributing)
@@ -45,6 +51,42 @@ OTel is the standard
 <div align="right"><a href="#top">↑ back to top</a></div>
 
 <a name="quick-start"></a>
+<!-- cognis:install:start -->
+## Install
+
+`otelbox` is source-available (not published to PyPI) — every method below installs
+straight from GitHub. Pick whichever you prefer; the one-line scripts auto-detect
+the best tool available on your machine.
+
+**One-liner (Linux / macOS):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/cognis-digital/otelbox/HEAD/install.sh | sh
+```
+
+**One-liner (Windows PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/cognis-digital/otelbox/HEAD/install.ps1 | iex
+```
+
+**Or install manually — any one of:**
+```sh
+pipx install "git+https://github.com/cognis-digital/otelbox.git"     # isolated (recommended)
+uv tool install "git+https://github.com/cognis-digital/otelbox.git"  # uv
+pip install "git+https://github.com/cognis-digital/otelbox.git"      # pip
+```
+
+**From source:**
+```sh
+git clone https://github.com/cognis-digital/otelbox.git
+cd otelbox && pip install .
+```
+
+Then run:
+```sh
+otelbox --help
+```
+<!-- cognis:install:end -->
+
 ## Quick start
 
 ```bash
