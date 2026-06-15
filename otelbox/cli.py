@@ -63,7 +63,15 @@ def _cmd_lint(args) -> int:
 
 
 def _cmd_bundle(args) -> int:
-    bundle = build_bundle(name=args.name)
+    try:
+        bundle = build_bundle(name=args.name)
+    except ValueError as exc:
+        msg = f"invalid bundle name: {exc}"
+        if args.format == "json":
+            print(json.dumps({"ok": False, "error": msg}))
+        else:
+            print(msg, file=sys.stderr)
+        return 2
     if args.format == "json":
         print(json.dumps({"name": args.name, "files": bundle}, indent=2))
     else:
@@ -103,8 +111,18 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = build_parser()
-    args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        args = parser.parse_args(argv)
+    except SystemExit:
+        raise  # let argparse handle --help / bad flags normally
+    try:
+        return args.func(args)
+    except KeyboardInterrupt:
+        print("\ninterrupted", file=sys.stderr)
+        return 130
+    except Exception as exc:  # noqa: BLE001
+        print(f"unexpected error: {exc}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

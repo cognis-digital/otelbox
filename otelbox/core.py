@@ -178,7 +178,11 @@ def _parse_map(lines, idx, indent, seed: Optional[Dict[str, Any]] = None):
 
 def load_config_text(text: str) -> Dict[str, Any]:
     """Parse the OTel-config YAML subset into a dict. Raises ValueError on
-    structural problems (tabs, etc.)."""
+    structural problems (tabs, non-string input, etc.)."""
+    if not isinstance(text, str):
+        raise ValueError(
+            f"config text must be a str, got {type(text).__name__}"
+        )
     raw: List[Tuple[int, str]] = []
     for n, line in enumerate(text.splitlines(), 1):
         if "\t" in line.replace(line.lstrip("\t"), ""):
@@ -409,7 +413,17 @@ def _dashboard_json() -> Dict[str, Any]:
 
 def build_bundle(name: str = "otelbox") -> Dict[str, str]:
     """Return a dict of {relative_path: file_contents} forming a runnable
-    local collector + dashboards bundle. Pure data generation, no I/O."""
+    local collector + dashboards bundle. Pure data generation, no I/O.
+
+    Raises ValueError if *name* is empty or contains path-separator characters.
+    """
+    if not isinstance(name, str) or not name.strip():
+        raise ValueError("bundle name must be a non-empty string")
+    import os
+    if os.sep in name or "/" in name or "\\" in name:
+        raise ValueError(
+            f"bundle name must not contain path separators, got: {name!r}"
+        )
     datasource = {
         "apiVersion": 1,
         "datasources": [

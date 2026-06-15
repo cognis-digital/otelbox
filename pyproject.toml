@@ -32,3 +32,10 @@ otelbox = "otelbox.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["otelbox"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["F", "E"]
+ignore = ["E501"]
