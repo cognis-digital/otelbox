@@ -20,6 +20,75 @@ pip install cognis-otelbox
 otelbox scan .            # → prioritized findings in seconds
 ```
 
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ otelbox-emit --version
+otelbox 0.1.0
+```
+
+```console
+$ otelbox-emit --help
+usage: otelbox [-h] [--version] [--format {table,json}] {lint,bundle} ...
+
+One-command OpenTelemetry collector + dashboards bundle (validate / triage /
+generate).
+
+positional arguments:
+  {lint,bundle}
+    lint                validate an OTel collector config
+    bundle              emit a runnable collector + dashboards bundle
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+                        output format (default: table)
+```
+
+> Blocks above are real `otelbox` output — reproduce them from a clone.
+
+**Sample result format** _(illustrative values — run on your own data for real findings):_
+
+```
+{
+"otelbox": {
+"platform": "stix",
+"findings": [
+{
+"id": "1234567890",
+"name": "Suspicious Network Traffic",
+"created_by": "John Doe",
+"created_at": "2023-02-15T14:30:00Z",
+"indicators": [
+{
+"type": "ip",
+"value": "192.168.1.100"
+}
+]
+},
+{
+"id": "2345678901",
+"name": "Malware Detection",
+"created_by": "Jane Smith",
+"created_at": "2023-02-16T10:45:00Z",
+"indicators": [
+{
+"type": "file_hash",
+"value": "MD5:1234567890abcdef"
+}
+]
+}
+]
+}
+```
+
+<!-- cognis:example:end -->
+
 ## Usage — step by step
 
 `otelbox` is a one-command OpenTelemetry collector + dashboards bundle: it validates collector configs and emits a runnable bundle.

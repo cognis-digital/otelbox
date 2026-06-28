@@ -1,0 +1,3 @@
+$ otelbox-emit --version
+
+otelbox 0.1.0

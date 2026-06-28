@@ -1,0 +1,17 @@
+$ otelbox-emit --help
+
+usage: otelbox [-h] [--version] [--format {table,json}] {lint,bundle} ...
+
+One-command OpenTelemetry collector + dashboards bundle (validate / triage /
+generate).
+
+positional arguments:
+  {lint,bundle}
+    lint                validate an OTel collector config
+    bundle              emit a runnable collector + dashboards bundle
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  --format {table,json}
+                        output format (default: table)
